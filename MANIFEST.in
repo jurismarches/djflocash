@@ -1,0 +1,3 @@
+include LICENSE
+include *.rst *.cfg *.ini *.txt
+recursive-include djflocash *.ico *.png *.css *.gif *.jpg *.txt *.js *.html *.xml

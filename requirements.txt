@@ -1,0 +1,2 @@
+django==1.10
+pycountry==18.5.26
