@@ -7,14 +7,15 @@ addons:
     - python3.4
     - python3.5
     - python3.6
+    - python3-pip
 env:
  - TOX_ENV=flake8
  - TOX_ENV=py34-django1_10
  - TOX_ENV=py35-django1_11
- - TOX_ENV=py35-django1_2_1
+ - TOX_ENV=py35-django2_1
  - TOX_ENV=py36-django1_11
- - TOX_ENV=py36-django1_2_1
+ - TOX_ENV=py36-django2_1
 install:
- - pip install tox
+ - sudo pip3 install tox
 script:
  - tox -e $TOX_ENV
