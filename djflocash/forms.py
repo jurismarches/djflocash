@@ -6,23 +6,22 @@ from django.core.exceptions import ValidationError
 from django.forms import models as forms_models
 
 from . import codes
+from . import models
 
 
 class MerchantForm(forms.Form):
     """Base info on merchant
     """
     merchant_name = forms.CharField(required=True, max_length=100)
-    merchant = forms.CharField(required=True, max_length=50)
     image_url = forms.CharField(required=False, max_length=250)
     return_url = forms.CharField(required=False, max_length=250)
     cancel_url = forms.CharField(required=False, max_length=250)
 
 
-class OrderForm(MerchantForm):
-
-    SETTINGS_PREFIX = "FLOCASH_"
-    SETTINGS_FIELDS = ['merchant_name', 'merchant', 'image_url', 'return_url', 'cancel_url']
-
+class BaseOrderMixin(forms.Form):
+    """Base fields constituting forms
+    """
+    merchant = forms.CharField(required=True, max_length=50)
     custom = forms.CharField(required=True, max_length=25)
     order_id = forms.CharField(required=True, max_length=25)
     amount = forms.FloatField(required=True)
@@ -33,6 +32,15 @@ class OrderForm(MerchantForm):
         choices=sorted(codes.CURRENCY_LABEL.items(), key=lambda c: c[1]),
     )
     quantity = forms.IntegerField(required=True, initial=1)
+
+
+class OrderForm(BaseOrderMixin, MerchantForm):
+    """Form to be submitted to flocash ecommerce service
+    """
+
+    SETTINGS_PREFIX = "FLOCASH_"
+    SETTINGS_FIELDS = ['merchant_name', 'merchant', 'image_url', 'return_url', 'cancel_url']
+
     country = forms.ChoiceField(
         required=False,
         choices=sorted(codes.COUNTRY_LABEL.items(), key=lambda c: c[1]),
@@ -83,3 +91,22 @@ class OrderForm(MerchantForm):
         order_data.update(overrides)
         order = cls(order_data)
         return order
+
+
+class NotificationForm(forms.ModelForm, BaseOrderMixin):
+    """Form for notifications received from flocash
+    """
+
+    class Meta:
+        model = models.Notification
+        exclude = ["created", "payement"]
+
+    sender_acct = forms.CharField(max_length=50)
+    trans_id = forms.CharField(max_length=20)
+    fpn_id = forms.CharField(max_length=20)
+    status = forms.IntegerField()
+    status_msg = forms.CharField(max_length=250)
+    customer = forms.CharField(max_length=250)
+    payer_email = forms.CharField(max_length=250)
+    payment_channel = forms.CharField(max_length=250)
+    txn_partner_ref = forms.CharField(max_length=250)

@@ -15,3 +15,5 @@ SECRET_KEY = "NSRT89aieu/*-v+ST"
 
 FLOCASH_MERCHANT = "test@merchant.com"
 FLOCASH_MERCHANT_NAME = "test name"
+
+ROOT_URLCONF = "djflocash.urls"

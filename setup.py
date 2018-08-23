@@ -24,6 +24,7 @@ setup(
     url='https://github.com/jurismarches/djflocash',
     packages=[
         'djflocash',
+        'djflocash.test',
     ],
     install_requires=[
         'pycountry>=18.5.26'
