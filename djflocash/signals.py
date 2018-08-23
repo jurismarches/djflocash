@@ -5,9 +5,9 @@ from . import models
 
 
 @receiver(signals.pre_save, sender=models.Notification)
-def link_payement(sender, **kwargs):
-    """try to link notification to payement
+def link_payment(sender, **kwargs):
+    """try to link notification to payment
     """
     obj = kwargs['instance']
-    if obj.payement is None:
-        obj.payement = obj.find_payement()
+    if obj.payment is None:
+        obj.payment = obj.find_payment()

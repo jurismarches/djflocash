@@ -66,15 +66,15 @@ class OrderForm(BaseOrderMixin, MerchantForm):
         return data
 
     @classmethod
-    def from_payement(cls, payement, **overrides):
-        """generate a form from a payement model
+    def from_payment(cls, payment, **overrides):
+        """generate a form from a payment model
 
         This is voluntarily a bit minimalistic (we do not copy user data)
 
         The SETTINGS_FIELDS and SETTINGS_PREFIX control how some data are fetch from settings.
 
-        :param payement: a payement model
-        :type payement: :py:cls:`djflocash.model.Payement`
+        :param payment: a payment model
+        :type payment: :py:cls:`djflocash.model.Payment`
 
         return: an instance of this class
           with attributes taken from overrides, model, and settings (in this order of priority)
@@ -85,7 +85,7 @@ class OrderForm(BaseOrderMixin, MerchantForm):
         for fname in cls.SETTINGS_FIELDS:
             order_data[fname] = getattr(settings, "%s%s" % (prefix, fname.upper()), None)
         # copy model fields
-        model_data = forms_models.model_to_dict(payement, fields=cls().fields.keys())
+        model_data = forms_models.model_to_dict(payment, fields=cls().fields.keys())
         order_data.update(model_data)
         # add overrides
         order_data.update(overrides)
@@ -99,7 +99,7 @@ class NotificationForm(forms.ModelForm, BaseOrderMixin):
 
     class Meta:
         model = models.Notification
-        exclude = ["created", "payement"]
+        exclude = ["created", "payment"]
 
     sender_acct = forms.CharField(max_length=50)
     trans_id = forms.CharField(max_length=20)

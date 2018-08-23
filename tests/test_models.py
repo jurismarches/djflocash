@@ -1,18 +1,18 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from djflocash.models import Payement
+from djflocash.models import Payment
 
 
-class PayementTestCase(TestCase):
+class PaymentTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
         cls.client = User.objects.create(username="test")
 
-    def test_payement_stays_after_user_cancellation(self):
+    def test_payment_stays_after_user_cancellation(self):
         user = User.objects.create(username="transiant")
-        payement = Payement.objects.create(
+        payment = Payment.objects.create(
             order_id="test order",
             custom="test custom",
             client=user,
@@ -23,7 +23,7 @@ class PayementTestCase(TestCase):
             quantity=1,
         )
         user.delete()
-        # payement still exists
-        payement = Payement.objects.get(pk=payement.pk)
+        # payment still exists
+        payment = Payment.objects.get(pk=payment.pk)
         # but user is empty
-        self.assertIsNone(payement.client_id)
+        self.assertIsNone(payment.client_id)

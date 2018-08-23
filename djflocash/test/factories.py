@@ -29,23 +29,23 @@ class OrderMixinFactory(factory.DjangoModelFactory):
     quantity = 1
 
 
-class PayementFactory(OrderMixinFactory):
+class PaymentFactory(OrderMixinFactory):
     client = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = models.Payement
+        model = models.Payment
 
 
 class NotificationFactory(OrderMixinFactory):
-    sender_acct = factory.LazyAttribute(lambda obj: obj.payement.client.email)
-    payement = factory.SubFactory(PayementFactory)
+    sender_acct = factory.LazyAttribute(lambda obj: obj.payment.client.email)
+    payment = factory.SubFactory(PaymentFactory)
     trans_id = factory.Sequence(lambda n: "trans-%d" % n)
     fpn_id = factory.Sequence(lambda n: "fpn-%d" % n)
     status = 0
     status_msg = factory.LazyAttribute(
         lambda obj: models.Notification.KNOWN_STATUS.get(obj.status, ""))
-    customer = factory.LazyAttribute(lambda obj: obj.payement.client.username)
-    payer_email = factory.LazyAttribute(lambda obj: obj.payement.client.email)
+    customer = factory.LazyAttribute(lambda obj: obj.payment.client.username)
+    payer_email = factory.LazyAttribute(lambda obj: obj.payment.client.email)
     payment_channel = "Mobile"
     txn_partner_ref = factory.Sequence(lambda n: "txn-%d" % n)
 

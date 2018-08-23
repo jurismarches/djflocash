@@ -35,9 +35,9 @@ class OrderMixin(models.Model):
         abstract = True
 
 
-class Payement(OrderMixin):
-    """The payement model,
-    It is intended to register a payement before user submit it,
+class Payment(OrderMixin):
+    """The payment model,
+    It is intended to register a payment before user submit it,
     and then wait for notification from flocash about its acceptation or cancellation.
 
     we do not register fields that are not meaningful from our point of view (like merchant name).
@@ -76,7 +76,7 @@ class Notification(OrderMixin):
         4: "Payment is pending.",
     }
 
-    #: status known to mean payement is ok
+    #: status known to mean payment is ok
     PAID_STATUS = {0}
 
     sender_acct = models.CharField(
@@ -111,18 +111,18 @@ class Notification(OrderMixin):
     )
     created = models.DateTimeField(auto_now_add=True)
 
-    payement = models.ForeignKey(
-        to=Payement,
+    payment = models.ForeignKey(
+        to=Payment,
         related_name='notifications',
         on_delete=models.deletion.SET_NULL,
         null=True)
 
-    def find_payement(self):
+    def find_payment(self):
         """try to find payment associated with notification
         """
         try:
-            return Payement.objects.get(order_id=self.order_id)
-        except (Payement.DoesNotExist, Payement.MultipleObjectsReturned):
+            return Payment.objects.get(order_id=self.order_id)
+        except (Payment.DoesNotExist, Payment.MultipleObjectsReturned):
             return None
 
     @property

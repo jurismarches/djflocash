@@ -27,7 +27,7 @@ class NotificationReceive(CreateView):
         raise NotImplementedError("Post data directly")
 
     def form_valid(self, form):
-        # associate payement if possible
+        # associate payment if possible
         self.object = form.save()
         return self.response_class()
 

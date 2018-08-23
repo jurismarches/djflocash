@@ -31,29 +31,29 @@ class NotificationReceiveTestCase(TestCase):
         )
 
     def test_valid_form(self):
-        # corresponding payement
-        payement = factories.PayementFactory()
+        # corresponding payment
+        payment = factories.PaymentFactory()
         # and another, to get it confused
-        factories.PayementFactory()
+        factories.PaymentFactory()
         form_data = dict(self.form_data)
-        form_data["order_id"] = payement.order_id
+        form_data["order_id"] = payment.order_id
         response = self.client.post(reverse("notification_receive"), data=form_data)
         self.assertEqual(response.status_code, 200)
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
-        self.assertEqual(notification.order_id, payement.order_id)
-        self.assertEqual(notification.payement, payement)
+        self.assertEqual(notification.order_id, payment.order_id)
+        self.assertEqual(notification.payment, payment)
 
-    def test_valid_form_no_payement(self):
+    def test_valid_form_no_payment(self):
         response = self.client.post(reverse("notification_receive"), data=self.form_data)
         self.assertEqual(response.status_code, 200)
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
         self.assertEqual(notification.order_id, "test order")
-        # no associated payement
-        self.assertIsNone(notification.payement)
+        # no associated payment
+        self.assertIsNone(notification.payment)
 
     def test_error_form(self):
         response = self.client.post(reverse("notification_receive"), data={})

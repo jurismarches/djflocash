@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.test.utils import override_settings
 
 from djflocash.forms import OrderForm
-from djflocash.models import Payement
+from djflocash.models import Payment
 
 
 @override_settings(FLOCASH_MERCHANT="test@merchant.com")
@@ -15,7 +15,7 @@ class OrderFormTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.client = User.objects.create(username="test")
-        cls.payement = Payement.objects.create(
+        cls.payment = Payment.objects.create(
             order_id="test order",
             custom="test custom",
             client=cls.client,
@@ -26,34 +26,34 @@ class OrderFormTestCase(TestCase):
             quantity=1,
         )
 
-    def test_create_from_payement(self):
-        payement = self.payement
-        result = OrderForm.from_payement(payement)
+    def test_create_from_payment(self):
+        payment = self.payment
+        result = OrderForm.from_payment(payment)
         self.assertTrue(result.is_valid())
         data = result.cleaned_data
-        self.assertEqual(data["order_id"], payement.order_id)
-        self.assertEqual(data["custom"], payement.custom)
-        self.assertEqual(data["amount"], payement.amount)
-        self.assertEqual(data["quantity"], payement.quantity)
+        self.assertEqual(data["order_id"], payment.order_id)
+        self.assertEqual(data["custom"], payment.custom)
+        self.assertEqual(data["amount"], payment.amount)
+        self.assertEqual(data["quantity"], payment.quantity)
         self.assertEqual(data["merchant"], "test@merchant.com")
         self.assertEqual(data["user_firstname"], "")
 
     @override_settings(FLOCASH_MERCHANT_NAME="test merchant name")
-    def test_create_from_payement_with_settings(self):
-        result = OrderForm.from_payement(self.payement)
+    def test_create_from_payment_with_settings(self):
+        result = OrderForm.from_payment(self.payment)
         self.assertTrue(result.is_valid())
         data = result.cleaned_data
         self.assertEqual(data["merchant_name"], "test merchant name")
 
-    def test_create_from_payement_overrides(self):
-        result = OrderForm.from_payement(self.payement, amount=800, custom="new custom")
+    def test_create_from_payment_overrides(self):
+        result = OrderForm.from_payment(self.payment, amount=800, custom="new custom")
         self.assertTrue(result.is_valid())
         data = result.cleaned_data
         self.assertEqual(data["amount"], 800)
         self.assertEqual(data["custom"], "new custom")
 
     def test_to_dict_raise_if_invalid(self):
-        order = OrderForm.from_payement(self.payement)
+        order = OrderForm.from_payment(self.payment)
         order.is_valid()
         data = order.cleaned_data
         # remove merchant
@@ -63,7 +63,7 @@ class OrderFormTestCase(TestCase):
             broken_order.to_dict()
 
     def test_to_dict(self):
-        result = OrderForm.from_payement(self.payement).to_dict()
+        result = OrderForm.from_payment(self.payment).to_dict()
         self.assertEqual(result["amount"], 400)
         self.assertEqual(result["custom"], "test custom")
         self.assertEqual(result["quantity"], 1)
