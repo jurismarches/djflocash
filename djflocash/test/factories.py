@@ -37,15 +37,18 @@ class PaymentFactory(OrderMixinFactory):
 
 
 class NotificationFactory(OrderMixinFactory):
-    sender_acct = factory.LazyAttribute(lambda obj: obj.payment.client.email)
+    sender_acct = factory.LazyAttribute(
+        lambda obj: obj.payment.client.email if obj.payment else "anonymous")
     payment = factory.SubFactory(PaymentFactory)
     trans_id = factory.Sequence(lambda n: "trans-%d" % n)
     fpn_id = factory.Sequence(lambda n: "fpn-%d" % n)
     status = 0
     status_msg = factory.LazyAttribute(
         lambda obj: models.Notification.KNOWN_STATUS.get(obj.status, ""))
-    customer = factory.LazyAttribute(lambda obj: obj.payment.client.username)
-    payer_email = factory.LazyAttribute(lambda obj: obj.payment.client.email)
+    customer = factory.LazyAttribute(
+        lambda obj: obj.payment.client.username if obj.payment else "anonymous")
+    payer_email = factory.LazyAttribute(
+        lambda obj: obj.payment.client.email if obj.payment else "anonymous@example.com")
     payment_channel = "Mobile"
     txn_partner_ref = factory.Sequence(lambda n: "txn-%d" % n)
 

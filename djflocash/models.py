@@ -98,10 +98,12 @@ class Notification(OrderMixin):
     )
     customer = models.CharField(
         verbose_name=_("Customer Name"),
+        blank=True,
         max_length=250,
     )
     payer_email = models.CharField(
         verbose_name=_("Customer's email"),
+        blank=True,
         max_length=250,
     )
     payment_channel = models.CharField(max_length=250)
@@ -112,16 +114,20 @@ class Notification(OrderMixin):
     created = models.DateTimeField(auto_now_add=True)
 
     payment = models.ForeignKey(
-        to=Payment,
+        to=getattr(settings, "FLOCASH_PAYMENT_MODEL", Payment),
         related_name='notifications',
         on_delete=models.deletion.SET_NULL,
         null=True)
+
+    @property
+    def _payment_type(self):
+        return self._meta.get_field("payment").remote_field.model
 
     def find_payment(self):
         """try to find payment associated with notification
         """
         try:
-            return Payment.objects.get(order_id=self.order_id)
+            return self._payment_type.objects.get(order_id=self.order_id)
         except (Payment.DoesNotExist, Payment.MultipleObjectsReturned):
             return None
 
