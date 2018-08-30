@@ -1,8 +1,9 @@
 import json
 import logging
 
-from django.views.generic import CreateView
 from django.http.response import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView
 
 from .forms import NotificationForm
 from .models import Notification
@@ -21,6 +22,11 @@ class NotificationReceive(CreateView):
     response_class = HttpResponse
 
     FORM_ERROR_STATUS = 422
+
+    # we need to be exempt from CSRF if activated for flocash won't have a CSRF token
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, *args, **kwargs):
         # just to be sure, for because of http_method_names, this should never be executed

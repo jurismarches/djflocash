@@ -16,6 +16,7 @@ class MerchantForm(forms.Form):
     image_url = forms.CharField(required=False, max_length=250)
     return_url = forms.CharField(required=False, max_length=250)
     cancel_url = forms.CharField(required=False, max_length=250)
+    notify_url = forms.CharField(required=False, max_length=250)
 
 
 class BaseOrderMixin(forms.Form):
