@@ -15,6 +15,7 @@ class OrderMixin(models.Model):
     order_id = models.CharField(
         verbose_name=_("Unique transaction ID of the order"),
         max_length=25,
+        db_index=True,
     )
     custom = models.CharField(
         verbose_name=_("Merchant defined field"),
@@ -60,7 +61,7 @@ class Payment(OrderMixin):
         on_delete=models.deletion.SET_NULL,  # we want to keep payments even if the user disapears
         null=True,
     )
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
 
 
 class Notification(OrderMixin):
@@ -111,7 +112,7 @@ class Notification(OrderMixin):
         verbose_name=_("Transaction reference return from bank"),
         max_length=250,
     )
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     payment = models.ForeignKey(
         to=getattr(settings, "FLOCASH_PAYMENT_MODEL", Payment),
