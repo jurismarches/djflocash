@@ -27,7 +27,7 @@ setup(
         'djflocash.test',
     ],
     install_requires=[
-        'pycountry>=18.5.26'
+        'pycountry>=18.5.26',
         'django>=1.10',
     ],
     classifiers=[
