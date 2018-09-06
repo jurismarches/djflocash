@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import find_packages, setup
 
 basedir = os.path.dirname(__file__)
 
@@ -22,10 +22,7 @@ setup(
     author='Jurismarches',
     author_email='contact@jurismarches.com',
     url='https://github.com/jurismarches/djflocash',
-    packages=[
-        'djflocash',
-        'djflocash.test',
-    ],
+    packages=find_packages(),
     install_requires=[
         'pycountry>=18.5.26',
         'django>=1.10',
