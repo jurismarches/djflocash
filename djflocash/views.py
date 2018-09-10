@@ -41,7 +41,7 @@ class NotificationReceive(CreateView):
         log.error(
             "Error while processing notification received from %s",
             get_ip_address(self.request),
-            extra={"form": form, "errors": form.errors},
+            extra={"data": form.data, "errors": form.errors},
         )
         return self.response_class(
             status=self.FORM_ERROR_STATUS,
