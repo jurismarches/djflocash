@@ -102,12 +102,12 @@ class NotificationForm(forms.ModelForm, BaseOrderMixin):
         model = models.Notification
         exclude = ["created", "payment"]
 
-    sender_acct = forms.CharField(max_length=50)
-    trans_id = forms.CharField(max_length=20)
+    sender_acct = forms.CharField(required=False, max_length=50)
+    trans_id = forms.CharField(max_length=25)
     fpn_id = forms.CharField(max_length=20)
     status = forms.IntegerField()
     status_msg = forms.CharField(max_length=250)
-    customer = forms.CharField(max_length=250)
-    payer_email = forms.CharField(max_length=250)
+    customer = forms.CharField(required=False, max_length=250)
+    payer_email = forms.CharField(required=False, max_length=250)
     payment_channel = forms.CharField(max_length=250)
-    txn_partner_ref = forms.CharField(max_length=250)
+    txn_partner_ref = forms.CharField(required=False, max_length=250)

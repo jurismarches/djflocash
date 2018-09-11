@@ -82,11 +82,12 @@ class Notification(OrderMixin):
 
     sender_acct = models.CharField(
         verbose_name=_("Sender Account"),
+        blank=True,
         max_length=50,
     )
     trans_id = models.CharField(
         verbose_name=_("Unique transaction ID. If error, the value is 0"),
-        max_length=20,
+        max_length=25,
     )
     fpn_id = models.CharField(
         verbose_name=_("Unique FloCash ID"),
@@ -110,6 +111,7 @@ class Notification(OrderMixin):
     payment_channel = models.CharField(max_length=250)
     txn_partner_ref = models.CharField(
         verbose_name=_("Transaction reference return from bank"),
+        blank=True,
         max_length=250,
     )
     created = models.DateTimeField(auto_now_add=True, db_index=True)
