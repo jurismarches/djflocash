@@ -22,6 +22,7 @@ class NotificationReceive(CreateView):
     response_class = HttpResponse
 
     FORM_ERROR_STATUS = 422
+    SUCCESS_CONTENT = "00"
 
     # we need to be exempt from CSRF if activated for flocash won't have a CSRF token
     @csrf_exempt
@@ -35,7 +36,7 @@ class NotificationReceive(CreateView):
     def form_valid(self, form):
         # associate payment if possible
         self.object = form.save()
-        return self.response_class()
+        return self.response_class(self.SUCCESS_CONTENT, content_type="text/plain")
 
     def form_invalid(self, form):
         log.error(

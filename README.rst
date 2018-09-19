@@ -32,6 +32,9 @@ You have to define some mandatory settings:
 * FLOCASH_BASE_URL the base url of flocash service
 * FLOCASH_PAYMENT_URI the uri handling ecommerce payment (will be urljoined to base url)
 * FLOCASH_MERCHANT, FLOCASH_MERCHANT_NAME your merchant account and display name
+* FLOCASH_NOTIFICATION_TOKEN is a token that will be added to your notification url
+  in order to make it unpredictable, so it is a shared secret between you and flocash
+  (you will set flocash notification url in their backend)
 
 and some optionnal one:
 
@@ -41,9 +44,18 @@ Usage
 =====
 
 
-The idea is that your visitor will submit a payment through his browser. For this you need to build the form, you can do this using `forms.OrderForm`, if you submit it through javascript you may use the `to_dict` method.
+The idea is that your visitor will submit a payment through his browser.
+For this you need to build the form, you can do this using `forms.OrderForm`,
+if you submit it through javascript you may use the `to_dict` method.
 
-You can expose the `views.NotificationReceive` view (or your own based on it) to get notifications (successful or canceled) payment. It creates a `models.Notification` instance and associate it to the `models.Payment` having same `order_id` if it exists.
+You can expose the `views.NotificationReceive` view (or your own based on it)
+to get notifications (successful or canceled) payment.
+It creates a `models.Notification` instance
+and associate it to the `models.Payment` having same `order_id` if it exists.
+
+You have to provide the notification URL to Flocash in the Flocash backoffice.
+By default it is `https://your.server.com/notification/xxxxxxxx/`,
+where `xxxxxxxx` is `FLOCASH_NOTIFICATION_TOKEN` setting.
 
 A possible workflow is thus the following:
 

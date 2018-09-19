@@ -30,6 +30,12 @@ class NotificationReceiveTestCase(TestCase):
             txn_partner_ref="test partner ref",
         )
 
+    def test_notification_url_uses_token(self):
+        self.assertEqual(
+            reverse("notification_receive"),
+            "/notification/test-test-test/",
+        )
+
     def test_valid_form(self):
         # corresponding payment
         payment = factories.PaymentFactory()
@@ -39,6 +45,7 @@ class NotificationReceiveTestCase(TestCase):
         form_data["order_id"] = payment.order_id
         response = self.client.post(reverse("notification_receive"), data=form_data)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode("utf-8"), "00")
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
@@ -48,6 +55,7 @@ class NotificationReceiveTestCase(TestCase):
     def test_valid_form_no_payment(self):
         response = self.client.post(reverse("notification_receive"), data=self.form_data)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode("utf-8"), "00")
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
