@@ -53,7 +53,7 @@ class NotificationReceiveTestCase(NotificationTestBase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode("utf-8"), "00")
         # validation was called
-        patched_validate.assert_called()
+        self.assertTrue(patched_validate.called, True)
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
@@ -94,7 +94,7 @@ class NotificationReceiveInvalidTestCase(NotificationTestBase):
         form_data = dict(self.form_data)
         response = self.client.post(reverse("notification_receive"), data=form_data)
         # validation was called
-        patched_validate.assert_called()
+        self.assertTrue(patched_validate.called)
         self.assertEqual(response.status_code, 409)
         self.assertEqual(response.content.decode("utf-8"), "INVALID")
         # object not created
