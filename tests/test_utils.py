@@ -38,11 +38,11 @@ class UtilsTestCase(TestCase):
         req = HttpRequest()
         req.POST["trans_id"] = "test_trans_id"
         req.POST["custom"] = "test_custom"
-        validate_notification_request(req.POST)
+        validate_notification_request(req.POST.dict())
         expected_url = "https://flocash.example.com/validateNotify.do"
         expected_params = {
-            "trans_id": ["test_trans_id"],
-            "custom": ["test_custom"],
+            "trans_id": "test_trans_id",
+            "custom": "test_custom",
             "cmd": "notify-validate",
         }
         patched_post.assert_called_with(expected_url, expected_params)

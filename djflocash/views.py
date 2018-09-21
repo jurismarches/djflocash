@@ -31,7 +31,7 @@ class NotificationReceive(CreateView):
 
     def post(self, request, *args, **kwargs):
         # verify post is from Flocash
-        if validate_notification_request(request):
+        if validate_notification_request(request.POST.dict()):
             return super().post(request, *args, **kwargs)
         else:
             return HttpResponse("INVALID", status=409)
