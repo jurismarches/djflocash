@@ -1,3 +1,10 @@
+import logging
+import urllib.parse
+
+import requests
+from django.conf import settings
+
+
 def get_ip_address(request):
     ip = ""
     try:
@@ -17,3 +24,19 @@ def get_ip_address(request):
     if not ip:
         ip = request.META["REMOTE_ADDR"]
     return ip
+
+
+def validate_notification_request(params, validate_url="/validateNotify.do"):  # request.POST.dict()
+    data = dict(params)
+    data["cmd"] = "notify-validate"
+    url = urllib.parse.ulrjoin(settings.FLOCASH_BASE_URL, validate_url)
+    try:
+        response = requests.post(url, data)
+        return response.status_code == 200 and response.text.lower() == "verified"
+    except Exception as e:
+        logging.error(
+            "Exception while validation notification with trans_id: %s: %s",
+            data.get("trans_id", '?'),
+            e,
+            extra={"params": params, "url": url},
+        )

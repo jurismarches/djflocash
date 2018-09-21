@@ -5,9 +5,11 @@ from django.test import TestCase
 
 from djflocash.models import Notification
 from djflocash.test import factories
+from djflocash.test.mock import validate_notification_request_ok
+from djflocash.test.mock import validate_notification_request_ko
 
 
-class NotificationReceiveTestCase(TestCase):
+class NotificationTestBase(TestCase):
 
     def setUp(self):
         self.form_data = dict(
@@ -30,13 +32,17 @@ class NotificationReceiveTestCase(TestCase):
             txn_partner_ref="test partner ref",
         )
 
-    def test_notification_url_uses_token(self):
+
+@validate_notification_request_ok()
+class NotificationReceiveTestCase(NotificationTestBase):
+
+    def test_notification_url_uses_token(self, patched_validate):
         self.assertEqual(
             reverse("notification_receive"),
             "/notification/test-test-test/",
         )
 
-    def test_valid_form(self):
+    def test_valid_form(self, patched_validate):
         # corresponding payment
         payment = factories.PaymentFactory()
         # and another, to get it confused
@@ -46,13 +52,15 @@ class NotificationReceiveTestCase(TestCase):
         response = self.client.post(reverse("notification_receive"), data=form_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode("utf-8"), "00")
+        # validation was called
+        patched_validate.assert_called()
         # object created
         self.assertEqual(Notification.objects.count(), 1)
         notification = Notification.objects.first()
         self.assertEqual(notification.order_id, payment.order_id)
         self.assertEqual(notification.payment, payment)
 
-    def test_valid_form_no_payment(self):
+    def test_valid_form_no_payment(self, patched_validate):
         response = self.client.post(reverse("notification_receive"), data=self.form_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.decode("utf-8"), "00")
@@ -63,7 +71,7 @@ class NotificationReceiveTestCase(TestCase):
         # no associated payment
         self.assertIsNone(notification.payment)
 
-    def test_error_form(self):
+    def test_error_form(self, patched_validate):
         response = self.client.post(reverse("notification_receive"), data={})
         self.assertEqual(response.status_code, 422)
         # incomplete
@@ -74,6 +82,20 @@ class NotificationReceiveTestCase(TestCase):
         errors = json.loads(response.content.decode("utf-8"))
         self.assertIn("order_id", errors)
 
-    def test_get_fails(self):
+    def test_get_fails(self, patched_validate):
         response = self.client.get(reverse("notification_receive"))
         self.assertEqual(response.status_code, 405)
+
+
+@validate_notification_request_ko()
+class NotificationReceiveInvalidTestCase(NotificationTestBase):
+
+    def test_validation_request_fails(self, patched_validate):
+        form_data = dict(self.form_data)
+        response = self.client.post(reverse("notification_receive"), data=form_data)
+        # validation was called
+        patched_validate.assert_called()
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.content.decode("utf-8"), "INVALID")
+        # object not created
+        self.assertEqual(Notification.objects.count(), 0)

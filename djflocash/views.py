@@ -7,7 +7,7 @@ from django.views.generic import CreateView
 
 from .forms import NotificationForm
 from .models import Notification
-from .utils import get_ip_address
+from .utils import get_ip_address, validate_notification_request
 
 
 log = logging.getLogger(__name__)
@@ -28,6 +28,13 @@ class NotificationReceive(CreateView):
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # verify post is from Flocash
+        if validate_notification_request(request):
+            return super().post(request, *args, **kwargs)
+        else:
+            return HttpResponse("INVALID", status=409)
 
     def get(self, *args, **kwargs):
         # just to be sure, for because of http_method_names, this should never be executed

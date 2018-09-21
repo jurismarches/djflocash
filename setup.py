@@ -26,6 +26,7 @@ setup(
     install_requires=[
         'pycountry>=18.5.26',
         'django>=1.10',
+        'requests>=2.18.4',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
