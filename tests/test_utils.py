@@ -1,6 +1,9 @@
+from unittest import mock
+
+from django.http import HttpRequest
 from django.test import TestCase
 
-from djflocash.utils import get_ip_address
+from djflocash.utils import get_ip_address, validate_notification_request
 
 
 class FakeRequest:
@@ -29,3 +32,17 @@ class UtilsTestCase(TestCase):
         request = FakeRequest()
         request.META["REMOTE_ADDR"] = "20.20.0.20"
         self.assertEqual(get_ip_address(request), "20.20.0.20")
+
+    @mock.patch("requests.post")
+    def test_validate_notification_request(self, patched_post):
+        req = HttpRequest()
+        req.POST["trans_id"] = "test_trans_id"
+        req.POST["custom"] = "test_custom"
+        validate_notification_request(req.POST)
+        expected_url = "https://flocash.example.com/validateNotify.do"
+        expected_params = {
+            "trans_id": ["test_trans_id"],
+            "custom": ["test_custom"],
+            "cmd": "notify-validate",
+        }
+        patched_post.assert_called_with(expected_url, expected_params)
