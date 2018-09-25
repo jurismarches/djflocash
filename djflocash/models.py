@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from . import codes
+from .managers import PaymentManager
 
 
 AMOUNT_MAX_DIGITS = getattr(settings, "FLOCASH_AMOUNT_MAX_DIGITS", 10)
@@ -46,6 +47,9 @@ class Payment(OrderMixin):
     .. note:: the user is linked to django user, this is a default,
        you may subclass this model if you need, to point to your users.
     """
+
+    objects = PaymentManager()
+
     country = models.CharField(
         null=True,
         choices=sorted(codes.COUNTRY_LABEL.items(), key=lambda c: c[1]),
@@ -63,22 +67,21 @@ class Payment(OrderMixin):
     )
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    @property
+    def is_pending(self):
+        return self.pk is not None and type(self).objects.pending().filter(pk=self.pk).exists()
+
 
 class Notification(OrderMixin):
     """A notification received from Flocash
     """
 
     # we list here known status, but do not enforce them into field to be tolerant
-    KNOWN_STATUS = {
-        0: "Payment is successful.",
-        1: "Payment was aborted.",
-        2: "Customer cancelled the payment.",
-        3: "Transaction was not authorized.",
-        4: "Payment is pending.",
-    }
+    KNOWN_STATUS = {int(k): msg for k, msg in codes.STATUS_LABEL.items()}
 
-    #: status known to mean payment is ok
-    PAID_STATUS = {0}
+    PAID_STATUS = codes.PAID_STATUS
+    UNPAID_STATUS = codes.UNPAID_STATUS
+    PENDING_STATUS = codes.PENDING_STATUS
 
     sender_acct = models.CharField(
         verbose_name=_("Sender Account"),

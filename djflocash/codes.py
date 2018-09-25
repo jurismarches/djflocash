@@ -14,3 +14,12 @@ STATUS_LABEL = {
     "0003": "Transaction was not authorized.",
     "0004": "Payment is pending.",
 }
+
+#: status known to mean payment is ok
+PAID_STATUS = {0}
+#: status known to mean payment is not ok
+UNPAID_STATUS = {1, 2, 3}
+#: status known to mean payment is pending, further notification expected
+PENDING_STATUS = {4}
+#: resolved status, all but pendings
+RESOLVED_STATUS = PAID_STATUS | UNPAID_STATUS
