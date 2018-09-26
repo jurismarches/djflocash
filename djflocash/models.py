@@ -138,5 +138,13 @@ class Notification(OrderMixin):
             return None
 
     @property
-    def successful(self):
+    def paid(self):
         return self.status in self.PAID_STATUS
+
+    @property
+    def unpaid(self):
+        return self.status in self.UNPAID_STATUS
+
+    @property
+    def pending(self):
+        return self.status in self.PENDING_STATUS
