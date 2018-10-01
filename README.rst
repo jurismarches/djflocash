@@ -11,7 +11,10 @@ Flocash is a gateway payement API
 enabling payement in a lot of african countries
 through credit cards, mobile phone payements and more.
 
-This library gives you some re-usable components to use in Django.
+This library gives you some re-usable components to use in your Django application.
+
+At the moment, it implements the redirect style API
+(not the one based on webservices).
 
 .. important:: This program IS NOT an official library of flocash.
      flocash is a registered trademark of Flocash ltd.
@@ -34,7 +37,9 @@ You have to define some mandatory settings:
 * FLOCASH_MERCHANT, FLOCASH_MERCHANT_NAME your merchant account and display name
 * FLOCASH_NOTIFICATION_TOKEN is a token that will be added to your notification url
   in order to make it unpredictable, so it is a shared secret between you and flocash
-  (you will set flocash notification url in their backend)
+  (you will set flocash notification url in their backend).
+
+  Note that djflocash also use notification validation using flocash dedicated service.
 
 and some optionnal one:
 
@@ -60,10 +65,20 @@ where `xxxxxxxx` is `FLOCASH_NOTIFICATION_TOKEN` setting.
 A possible workflow is thus the following:
 
 - you create a `models.Payment` corresponding to your visitor basket
-- you use `forms.OrderForm.from_payment` to generate corresponding form and render it in visitor browser (using hidden fields)
-- visitor submit the form to flocash and is redirected to flocash payment portal where he completes the transaction
-- flocash submit the payment notification through `views.NotificationReceive`, and some custom handler you attached on eg. `post_save` signal make the order effective in you system
+- you use `forms.OrderForm.from_payment` to generate corresponding form
+  and render it in visitor browser (using hidden fields)
+- visitor submit the form to flocash and is redirected to flocash payment portal
+  where he completes the transaction
+- flocash submit the payment notification through `views.NotificationReceive`,
+  and some custom handler you attached on eg. `post_save` signal
+  make the order effective in your system
 - visitors gets back to your site where you tell him his purchase is effective
+
+When the response for payment is PENDING, djflocash tracks the payment status
+and keep it pending, until a payment or non payment notifications arrives
+(see `Payment.is_pending` and `PaymentManager.pending`.
+It's up to you to use this information to notify your customers,
+that a pending payment is already in progress.
 
 .. |pypi-version| image:: https://img.shields.io/pypi/v/djflocash.svg
     :target: https://pypi.python.org/pypi/djflocash
