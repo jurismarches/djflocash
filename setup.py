@@ -22,14 +22,14 @@ setup(
     author='Jurismarches',
     author_email='contact@jurismarches.com',
     url='https://github.com/jurismarches/djflocash',
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests"]),
     install_requires=[
         'pycountry>=18.5.26',
         'django>=1.10',
         'requests>=2.18.4',
     ],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Framework :: Django',
         'Intended Audience :: Developers',
