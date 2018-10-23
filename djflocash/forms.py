@@ -103,8 +103,8 @@ class NotificationForm(forms.ModelForm, BaseOrderMixin):
         exclude = ["created", "payment"]
 
     sender_acct = forms.CharField(required=False, max_length=50)
-    trans_id = forms.CharField(max_length=25)
-    fpn_id = forms.CharField(max_length=20)
+    trans_id = forms.CharField(max_length=50)
+    fpn_id = forms.CharField(max_length=50)
     status = forms.IntegerField()
     status_msg = forms.CharField(max_length=250)
     customer = forms.CharField(required=False, max_length=250)

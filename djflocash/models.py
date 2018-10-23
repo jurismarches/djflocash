@@ -90,11 +90,11 @@ class Notification(OrderMixin):
     )
     trans_id = models.CharField(
         verbose_name=_("Unique transaction ID. If error, the value is 0"),
-        max_length=25,
+        max_length=50,
     )
     fpn_id = models.CharField(
         verbose_name=_("Unique FloCash ID"),
-        max_length=20,
+        max_length=50,
     )
     status = models.PositiveSmallIntegerField()
     status_msg = models.CharField(
