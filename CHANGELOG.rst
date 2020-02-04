@@ -8,6 +8,15 @@ and this project tries to adhere to `Semantic Versioning`_.
 .. _`Keep a Changelog`: http://keepachangelog.com/en/1.0.0/
 .. _`Semantic Versioning`: http://semver.org/spec/v2.0.0.html
 
+ROLLING
+=======
+
+Added
+-----
+
+- Django 2.2 compatibility
+- Python 3.7 compatibility
+
 0.1 - 2018-10-01
 ================
 
