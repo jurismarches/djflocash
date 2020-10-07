@@ -25,7 +25,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     install_requires=[
         'pycountry>=18.5.26',
-        'django>=1.10',
+        'django>=2.1',
         'requests>=2.18.4',
     ],
     classifiers=[
@@ -34,8 +34,7 @@ setup(
         'Framework :: Django',
         'Intended Audience :: Developers',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
 )
