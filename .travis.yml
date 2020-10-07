@@ -9,7 +9,6 @@ addons:
     - python3-pip
 env:
  - TOX_ENV=flake8
- - TOX_ENV=py36-django1_11
  - TOX_ENV=py36-django2_1
  - TOX_ENV=py36-django2_2
  - TOX_ENV=py37-django2_1
