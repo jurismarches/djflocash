@@ -17,6 +17,12 @@ Added
 - Django 2.2 compatibility
 - Python 3.7 compatibility
 
+Removed
+-------
+
+- Python >= 3.5 compatibility
+- Django >= 2.0 compatibility
+
 0.1 - 2018-10-01
 ================
 
