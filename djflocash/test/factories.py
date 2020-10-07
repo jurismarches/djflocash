@@ -15,7 +15,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     email = factory.LazyAttribute(lambda obj: "%s@example.com" % obj.username)
 
 
-class OrderMixinFactory(factory.DjangoModelFactory):
+class OrderMixinFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.OrderMixin

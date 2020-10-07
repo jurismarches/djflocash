@@ -1,2 +1,2 @@
 -r requirements.txt
-factory_boy==2.11.1
+factory_boy>=3

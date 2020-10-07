@@ -25,5 +25,6 @@ env:
  - TOX_ENV=py37-django2_2
 install:
  - sudo pip3 install tox
+ - sudo pip3 install -U pip setuptools 
 script:
  - tox -e $TOX_ENV
