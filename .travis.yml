@@ -4,23 +4,14 @@ addons:
     sources:
     - deadsnakes
     packages:
-    - python3.4
-    - python3.5
     - python3.6
     - python3.7
     - python3-pip
 env:
  - TOX_ENV=flake8
- - TOX_ENV=py34-django1_10
- - TOX_ENV=py35-django1_11
- - TOX_ENV=py35-django2_0
- - TOX_ENV=py35-django2_1
- - TOX_ENV=py35-django2_2
  - TOX_ENV=py36-django1_11
- - TOX_ENV=py36-django2_0
  - TOX_ENV=py36-django2_1
  - TOX_ENV=py36-django2_2
- - TOX_ENV=py37-django2_0
  - TOX_ENV=py37-django2_1
  - TOX_ENV=py37-django2_2
 install:
