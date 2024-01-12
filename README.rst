@@ -1,5 +1,8 @@
-DJFlocash
-###########
+DJFlocash (archived)
+====================
+
+⚠️ This project is archived and no longer maintained.
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 |pypi-version| |travis|
 
